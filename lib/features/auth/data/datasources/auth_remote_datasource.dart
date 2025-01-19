@@ -1,12 +1,13 @@
+import 'package:emperp_app/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDatasource {
-  Future<String> signupWithEmailPassword({
+  Future<UserModel> signupWithEmailPassword({
     required String name,
     required String email,
     required String password,
   });
-  Future<String> loginWithEmailPassword({
+  Future<UserModel> loginWithEmailPassword({
     required String email,
     required String password,
   });
@@ -17,7 +18,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   AuthRemoteDatasourceImpl(this.supabaseClient);
 
   @override
-  Future<String> loginWithEmailPassword({
+  Future<UserModel> loginWithEmailPassword({
     required String email,
     required String password,
   }) {
@@ -26,7 +27,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   }
 
   @override
-  Future<String> signupWithEmailPassword({
+  Future<UserModel> signupWithEmailPassword({
     required String name,
     required String email,
     required String password,
@@ -42,7 +43,8 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       if (response.user == null) {
         throw 'User is null error';
       }
-      return response.user!.id;
+      // return UserModel.fromJson(response.user!.toJson());
+      return UserModel.fromJson(response.user!.toJson());
     } catch (e) {
       throw e.toString();
     }

@@ -1,13 +1,14 @@
 import 'package:emperp_app/core/errors/failure.dart';
-import 'package:emperp_app/features/auth/domain/repository/auth_repository.dart';
+import 'package:emperp_app/features/auth/data/models/user_model.dart';
+import 'package:emperp_app/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:fpdart/fpdart.dart';
 
 class UserSignup {
-  final AuthRepository authRepository;
-  const UserSignup(this.authRepository);
+  final AuthRepositoryImpl authRepositoryImpl;
+  const UserSignup(this.authRepositoryImpl);
 
-  Future<Either<Failure, String>> call(UserSignupParams params) async {
-    return await authRepository.signupWithEmailPassword(
+  Future<Either<Failure, UserModel>> call(UserSignupParams params) async {
+    return await authRepositoryImpl.signupWithEmailPassword(
       name: params.name,
       email: params.email,
       password: params.password,

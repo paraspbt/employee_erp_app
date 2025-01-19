@@ -1,4 +1,5 @@
-import 'package:emperp_app/features/auth/domain/usecases/user_signup.dart';
+import 'package:emperp_app/features/auth/data/models/user_model.dart';
+import 'package:emperp_app/features/auth/presentation/usecases/user_signup.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

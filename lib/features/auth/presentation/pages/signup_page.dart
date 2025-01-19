@@ -36,9 +36,25 @@ class _SignupPageState extends State<SignupPage> {
         onTap: () {
           FocusScope.of(context).unfocus();
         },
-        child: Stack(
-          children: [
-            SingleChildScrollView(
+        child: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthFailure) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  const SnackBar(
+                    content: Text('Error'),
+                  ),
+                );
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Form(
                 key: formKey,
@@ -108,14 +124,8 @@ class _SignupPageState extends State<SignupPage> {
                   ],
                 ),
               ),
-            ),
-            BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-              if (state is AuthLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              return const SizedBox.shrink();
-            })
-          ],
+            );
+          },
         ),
       ),
     );
