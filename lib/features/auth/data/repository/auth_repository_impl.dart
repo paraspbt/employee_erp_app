@@ -25,7 +25,7 @@ class AuthRepositoryImpl {
         password: password,
       );
       return right(userModel);
-    } catch (e) {
+    } on Exception catch (e) {
       return left(Failure(e.toString()));
     }
   }

@@ -8,11 +8,12 @@ class UserSignup {
   const UserSignup(this.authRepositoryImpl);
 
   Future<Either<Failure, UserModel>> call(UserSignupParams params) async {
-    return await authRepositoryImpl.signupWithEmailPassword(
+    final res = await authRepositoryImpl.signupWithEmailPassword(
       name: params.name,
       email: params.email,
       password: params.password,
     );
+    return res;
   }
 }
 

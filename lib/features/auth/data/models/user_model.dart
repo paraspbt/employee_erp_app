@@ -10,6 +10,6 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> map) {
-    return UserModel(id: map['id'], name: map['name'], email: map['email']);
+    return UserModel(id: map['id'], name: map['user_metadata']['name'], email: map['user_metadata']['email']);
   }
 }
