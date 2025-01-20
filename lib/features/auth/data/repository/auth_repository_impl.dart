@@ -2,7 +2,6 @@ import 'package:emperp_app/core/errors/failure.dart';
 import 'package:emperp_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:emperp_app/features/auth/data/models/user_model.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepositoryImpl {
   final AuthRemoteDatasource authRemoteDatasource;
@@ -16,8 +15,6 @@ class AuthRepositoryImpl {
         password: password,
       );
       return right(userModel);
-    } on AuthException catch (e) {
-      return left(Failure(e.toString()));
     } on Exception catch (e) {
       return left(Failure(e.toString()));
     }
@@ -35,8 +32,6 @@ class AuthRepositoryImpl {
         password: password,
       );
       return right(userModel);
-    } on AuthException catch (e) {
-      return left(Failure(e.toString()));
     } on Exception catch (e) {
       return left(Failure(e.toString()));
     }

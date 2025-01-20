@@ -33,9 +33,10 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       final juser = response.user!.toJson();
       final userModel = UserModel.fromJson(juser);
       return userModel;
-    } on AuthException {
-      throw Exception('Invalid Credentials');
     } on Exception catch (e) {
+      if (e.toString().contains('Invalid login credentials')) {
+        throw Exception('Invalid Login Credentials');
+      }
       throw Exception(e.toString());
     }
   }
@@ -61,7 +62,10 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       final userModel = UserModel.fromJson(juser);
       return userModel;
     } on Exception catch (e) {
-      throw e.toString();
+      if (e.toString().contains('already registered')) {
+        throw Exception('Already Registered');
+      }
+      throw Exception(e.toString());
     }
   }
 }

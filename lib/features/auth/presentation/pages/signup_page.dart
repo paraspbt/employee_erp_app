@@ -115,8 +115,8 @@ class _SignupPageState extends State<SignupPage> {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(
-                      const SnackBar(
-                        content: Text('Error'),
+                      SnackBar(
+                        content: Text(state.message),
                       ),
                     );
                 }
