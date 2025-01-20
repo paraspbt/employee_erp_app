@@ -36,4 +36,16 @@ class AuthRepositoryImpl {
       return left(Failure(e.toString()));
     }
   }
+
+  Future<Either<Failure, UserModel>> currentUser() async {
+    try {
+      final userModel = await authRemoteDatasource.getCurrentUserData();
+      if (userModel == null) {
+        return left(Failure('User not logged in!'));
+      }
+      return right(userModel);
+    } on Exception catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
 }

@@ -2,6 +2,7 @@ import 'package:emperp_app/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDatasource {
+  Session? get currentSesion;
   Future<UserModel> signupWithEmailPassword({
     required String name,
     required String email,
@@ -11,11 +12,15 @@ abstract interface class AuthRemoteDatasource {
     required String email,
     required String password,
   });
+  Future<UserModel?> getCurrentUserData();
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   final SupabaseClient supabaseClient;
   AuthRemoteDatasourceImpl(this.supabaseClient);
+
+  @override
+  Session? get currentSesion => supabaseClient.auth.currentSession;
 
   @override
   Future<UserModel> loginWithEmailPassword({
@@ -65,6 +70,24 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       if (e.toString().contains('already registered')) {
         throw Exception('Already Registered');
       }
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<UserModel?> getCurrentUserData() async {
+    try {
+      if (currentSesion != null) {
+        final userData = await supabaseClient
+            .from('profiles')
+            .select()
+            .eq('id', currentSesion!.user.id);
+        return UserModel.fromJsonSessiondata(userData.first).copyWith(
+          email: currentSesion!.user.email,
+        );
+      }
+      return null;
+    } on Exception catch (e) {
       throw Exception(e.toString());
     }
   }

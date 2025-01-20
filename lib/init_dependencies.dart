@@ -1,5 +1,6 @@
 import 'package:emperp_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:emperp_app/features/auth/data/repository/auth_repository_impl.dart';
+import 'package:emperp_app/features/auth/presentation/usecases/current_user.dart';
 import 'package:emperp_app/features/auth/presentation/usecases/user_login.dart';
 import 'package:emperp_app/features/auth/presentation/usecases/user_signup.dart';
 import 'package:emperp_app/features/auth/presentation/bloc/auth_bloc.dart';
@@ -30,10 +31,13 @@ void _initAuth() {
 
   getIt.registerFactory(() => UserLogin(getIt<AuthRepositoryImpl>()));
 
+  getIt.registerFactory(() => CurrentUser(getIt<AuthRepositoryImpl>()));
+
   getIt.registerLazySingleton(
     () => AuthBloc(
       userSignup: getIt<UserSignup>(),
       userLogin: getIt<UserLogin>(),
+      currentUser: getIt<CurrentUser>(),
     ),
   );
 }
