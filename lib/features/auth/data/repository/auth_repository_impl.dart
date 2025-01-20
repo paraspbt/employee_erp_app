@@ -2,15 +2,25 @@ import 'package:emperp_app/core/errors/failure.dart';
 import 'package:emperp_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:emperp_app/features/auth/data/models/user_model.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepositoryImpl {
   final AuthRemoteDatasource authRemoteDatasource;
   const AuthRepositoryImpl(this.authRemoteDatasource);
 
   Future<Either<Failure, UserModel>> loginWithEmailPassword(
-      {required String email, required String password}) {
-    // TODO: implement loginWithEmailPassword
-    throw UnimplementedError();
+      {required String email, required String password}) async {
+    try {
+      final userModel = await authRemoteDatasource.loginWithEmailPassword(
+        email: email,
+        password: password,
+      );
+      return right(userModel);
+    } on AuthException catch (e) {
+      return left(Failure(e.toString()));
+    } on Exception catch (e) {
+      return left(Failure(e.toString()));
+    }
   }
 
   Future<Either<Failure, UserModel>> signupWithEmailPassword({
@@ -25,6 +35,8 @@ class AuthRepositoryImpl {
         password: password,
       );
       return right(userModel);
+    } on AuthException catch (e) {
+      return left(Failure(e.toString()));
     } on Exception catch (e) {
       return left(Failure(e.toString()));
     }
