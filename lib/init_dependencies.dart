@@ -1,9 +1,10 @@
+import 'package:emperp_app/core/GlobalBloc/global_bloc.dart';
 import 'package:emperp_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:emperp_app/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:emperp_app/features/auth/presentation/usecases/current_user.dart';
 import 'package:emperp_app/features/auth/presentation/usecases/user_login.dart';
 import 'package:emperp_app/features/auth/presentation/usecases/user_signup.dart';
-import 'package:emperp_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:emperp_app/features/auth/presentation/AuthBloc/auth_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -33,11 +34,14 @@ void _initAuth() {
 
   getIt.registerFactory(() => CurrentUser(getIt<AuthRepositoryImpl>()));
 
+  getIt.registerLazySingleton(() => GlobalBloc());
+
   getIt.registerLazySingleton(
     () => AuthBloc(
       userSignup: getIt<UserSignup>(),
       userLogin: getIt<UserLogin>(),
       currentUser: getIt<CurrentUser>(),
+      globalBloc: getIt<GlobalBloc>(),
     ),
   );
 }

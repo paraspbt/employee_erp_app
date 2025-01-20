@@ -1,5 +1,5 @@
 import 'package:emperp_app/core/theme/app_pallete.dart';
-import 'package:emperp_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:emperp_app/features/auth/presentation/AuthBloc/auth_bloc.dart';
 import 'package:emperp_app/features/auth/presentation/pages/login_page.dart';
 import 'package:emperp_app/features/auth/presentation/widgets/auth_button.dart';
 import 'package:emperp_app/features/auth/presentation/widgets/auth_field.dart';

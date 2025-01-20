@@ -1,3 +1,4 @@
+import 'package:emperp_app/core/GlobalBloc/global_bloc.dart';
 import 'package:emperp_app/features/auth/data/models/user_model.dart';
 import 'package:emperp_app/features/auth/presentation/usecases/current_user.dart';
 import 'package:emperp_app/features/auth/presentation/usecases/user_login.dart';
@@ -12,13 +13,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignup _userSignup;
   final UserLogin _userLogin;
   final CurrentUser _currentUser;
+  final GlobalBloc _globalBloc;
   AuthBloc({
     required UserSignup userSignup,
     required UserLogin userLogin,
     required CurrentUser currentUser,
+    required GlobalBloc globalBloc,
   })  : _userSignup = userSignup,
         _userLogin = userLogin,
         _currentUser = currentUser,
+        _globalBloc = globalBloc,
         super(AuthInitial()) {
     on<AuthSignup>(
       (event, emit) async {
@@ -30,8 +34,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             password: event.password,
           ),
         );
-        return res.fold(
-            (l) => emit(AuthFailure(l.message)), (r) => emit(AuthSuccess(r)));
+        return res.fold((l) => emit(AuthFailure(l.message)), (r) {
+          _globalBloc.add(UpdateUser(r));
+          emit(AuthSuccess(r));
+        });
       },
     );
 
@@ -44,14 +50,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             password: event.password,
           ),
         );
-        return res.fold(
-            (l) => emit(AuthFailure(l.message)), (r) => emit(AuthSuccess(r)));
+        return res.fold((l) => emit(AuthFailure(l.message)), (r) {
+          _globalBloc.add(UpdateUser(r));
+          emit(AuthSuccess(r));
+        });
       },
     );
 
-    on<AuthUserLoggedIn>((event, emit) async {
+    on<AuthUserLoggedInCheck>((event, emit) async {
       final res = await _currentUser();
       res.fold((l) => emit(AuthFailure(l.message)), (r) {
+        _globalBloc.add(UpdateUser(r));
         emit(AuthSuccess(r));
       });
     });
