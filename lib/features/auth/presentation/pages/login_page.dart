@@ -33,9 +33,25 @@ class _LoginPageState extends State<LoginPage> {
         onTap: () {
           FocusScope.of(context).unfocus();
         },
-        child: Stack(
-          children: [
-            SingleChildScrollView(
+        child: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthFailure) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                  ),
+                );
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Form(
                 key: formKey,
@@ -69,11 +85,11 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
                           BlocProvider.of<AuthBloc>(context).add(
-                                AuthLogin(
-                                  email: emailController.text.trim(),
-                                  password: passwordController.text.trim(),
-                                ),
-                              );
+                            AuthLogin(
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim(),
+                            ),
+                          );
                         }
                       },
                     ),
@@ -102,29 +118,8 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-            ),
-            BlocConsumer<AuthBloc, AuthState>(
-              listener: (context, state) {
-                if (state is AuthFailure) {
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(
-                       SnackBar(
-                        content: Text(state.message),
-                      ),
-                    );
-                }
-              },
-              builder: (context, state) {
-                if (state is AuthLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

@@ -30,6 +30,20 @@ class AppTheme {
         ),
         borderRadius: BorderRadius.circular(8),
       ),
+      errorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(
+          color: AppPallete.darkGreen,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(
+          color: AppPallete.darkGreen,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
       hintStyle: const TextStyle(fontSize: 20),
     ),
   );
