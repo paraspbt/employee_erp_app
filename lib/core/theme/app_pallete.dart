@@ -7,4 +7,5 @@ class AppPallete {
   static const Color brightGreen = Color(0xff2c7930);
   static const Color dullGreen = Color(0xff669383);
   static const Color brightRed = Color(0xffc62828);
+  static const Color faded = Color(0xffccdac6);
 }

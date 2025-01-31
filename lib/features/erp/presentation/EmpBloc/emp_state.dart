@@ -12,4 +12,7 @@ final class EmpFailure extends EmpState {
   EmpFailure(this.message);
 }
 
-final class EmpSuccess extends EmpState {}
+final class EmpSuccess extends EmpState {
+  final List<EmployeeModel> employees;
+  EmpSuccess(this.employees);
+}

@@ -1,8 +1,9 @@
 import 'package:emperp_app/core/GlobalBloc/global_bloc.dart';
 import 'package:emperp_app/core/widgets/app_button.dart';
 import 'package:emperp_app/core/widgets/input_field.dart';
-import 'package:emperp_app/core/widgets/show_snackbar.dart';
-import 'package:emperp_app/features/erp/presentation/bloc/emp_bloc.dart';
+import 'package:emperp_app/core/widgets/my_app_bar.dart';
+import 'package:emperp_app/core/utils/show_snackbar.dart';
+import 'package:emperp_app/features/erp/presentation/EmpBloc/emp_bloc.dart';
 import 'package:emperp_app/features/erp/presentation/pages/emp_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,13 +54,11 @@ class _AddEmployeeState extends State<AddEmployeePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Add Employee"),
-      ),
+      appBar: const MyAppBar(),
       body: BlocConsumer<EmpBloc, EmpState>(
         listener: (context, state) {
           if (state is EmpFailure) {
-            showSnackbar(context, state.message);
+            showSnackbar(context, state.message, true);
           } else if (state is EmpSuccess) {
             Navigator.pushAndRemoveUntil(
                 context, EmpListPage.route(), (route) => false);
@@ -133,7 +132,7 @@ class _AddEmployeeState extends State<AddEmployeePage> {
                               }
                               context.read<EmpBloc>().add(CreateEmpEvent(
                                   profileId: (context.read<GlobalBloc>().state
-                                          as AppUserLoggedIn)
+                                          as AppInState)
                                       .userModel
                                       .id,
                                   name: nameController.text.trim(),
@@ -144,7 +143,7 @@ class _AddEmployeeState extends State<AddEmployeePage> {
                                   address: addressController.text.trim()));
                             }
                           } on Exception catch (e) {
-                            showSnackbar(context, e.toString());
+                            showSnackbar(context, e.toString(), true);
                           }
                         },
                       ),

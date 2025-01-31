@@ -20,3 +20,17 @@ final class CreateEmpEvent extends EmpEvent {
     required this.address,
   });
 }
+
+final class GetEmployeesEvent extends EmpEvent {
+  final String profileId;
+  GetEmployeesEvent({
+    required this.profileId,
+  });
+}
+
+final class UpdateEmpEvent extends EmpEvent {
+  final EmployeeModel updatedEmployee;
+  UpdateEmpEvent({
+    required this.updatedEmployee,
+  });
+}

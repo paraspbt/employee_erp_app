@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class EmployeeModel {
   final String id;
   final String profileId;
@@ -6,11 +7,10 @@ class EmployeeModel {
   final double salary;
   final String joinedAt;
   final String? address;
-  final int presents;
-  final int absents;
-  final List<String> absentDays;
   final double credit;
   final DateTime updatedAt;
+  final String lastPaid;
+  final String? note;
 
   EmployeeModel({
     required this.id,
@@ -20,10 +20,9 @@ class EmployeeModel {
     required this.salary,
     required this.joinedAt,
     this.address,
-    this.presents = 0,
-    this.absents = 0,
-    this.absentDays = const [],
     this.credit = 0.0,
+    this.lastPaid = '',
+    this.note,
     required this.updatedAt,
   });
 
@@ -36,11 +35,10 @@ class EmployeeModel {
       'salary': salary,
       'joined_at': joinedAt,
       'address': address,
-      'presents': presents,
-      'absents': absents,
-      'absent_days': absentDays,
       'credit': credit,
       'updated_at': updatedAt.toIso8601String(),
+      'last_paid' : lastPaid,
+      'note' : note,
     };
   }
 
@@ -53,12 +51,40 @@ class EmployeeModel {
       salary: map['salary'] as double,
       joinedAt: map['joined_at'] as String,
       address: map['address'] != null ? map['address'] as String : null,
-      presents: map['presents'] as int,
-      absents: map['absents'] as int,
-      absentDays: List<String>.from(
-          map['absent_days'] ?? []),
       credit: map['credit'] as double,
       updatedAt: DateTime.parse(map['updated_at'] as String),
+      lastPaid: map['last_paid'] as String,
+      note: map['note'] as String,
+    );
+  }
+
+  get joiningDate => null;
+
+  EmployeeModel copyWith({
+    String? id,
+    String? profileId,
+    String? name,
+    String? phone,
+    double? salary,
+    String? joinedAt,
+    String? address,
+    double? credit,
+    DateTime? updatedAt,
+    String? lastPaid,
+    String? note,
+  }) {
+    return EmployeeModel(
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      salary: salary ?? this.salary,
+      joinedAt: joinedAt ?? this.joinedAt,
+      address: address ?? this.address,
+      credit: credit ?? this.credit,
+      updatedAt: updatedAt ?? this.updatedAt,
+      lastPaid: lastPaid ?? this.lastPaid,
+      note: note ?? this.note,
     );
   }
 }

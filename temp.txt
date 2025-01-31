@@ -1,0 +1,52 @@
+actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(
+              Icons.more_vert,
+              color: AppPallete.darkGreen,
+            ),
+            color: AppPallete.backgroundColor,
+            onSelected: (String result) {
+              if (result == 'edit') {
+                Navigator.push(context, EditPage.route(index: index));
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem<String>(
+                value: 'edit',
+                child: Text(
+                  'Edit',
+                  style: TextStyle(color: AppPallete.darkGreen),
+                ),
+              ),
+            ],
+          ),
+        ],
+
+
+
+
+        floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+                floatingActionButton: FloatingActionButton.extended(
+                  label: const Text(
+                    'Attendance',
+                    style: TextStyle(color: AppPallete.darkGreen, fontSize: 20),
+                  ),
+                  icon: const Icon(Icons.add_circle_outline_rounded),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8),
+                    ),
+                    side: BorderSide(
+                      color: AppPallete.darkGreen,
+                      width: 4,
+                    ),
+                  ),
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: AppPallete.darkGreen,
+                  elevation: 0,
+                  onPressed: () {
+                    Navigator.push(context, AttendancePage.route());
+                  },
+                  heroTag: 'Attendance Route',
+                ),

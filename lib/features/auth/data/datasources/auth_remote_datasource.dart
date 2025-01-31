@@ -77,6 +77,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   @override
   Future<UserModel?> getCurrentUserData() async {
     try {
+
       if (currentSesion != null) {
         final userData = await supabaseClient
             .from('profiles')

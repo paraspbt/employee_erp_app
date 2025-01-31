@@ -45,6 +45,18 @@ class AppTheme {
         borderRadius: BorderRadius.circular(8),
       ),
       hintStyle: const TextStyle(fontSize: 20),
+      
+    ),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(overflow: TextOverflow.ellipsis),
+      bodyMedium: TextStyle(overflow: TextOverflow.ellipsis),
+      bodySmall: TextStyle(overflow: TextOverflow.ellipsis),
+      titleLarge: TextStyle(overflow: TextOverflow.ellipsis),
+      titleMedium: TextStyle(overflow: TextOverflow.ellipsis),
+      titleSmall: TextStyle(overflow: TextOverflow.ellipsis),
+      labelLarge: TextStyle(overflow: TextOverflow.ellipsis,),
+      labelMedium: TextStyle(overflow: TextOverflow.ellipsis),
+      labelSmall: TextStyle(overflow: TextOverflow.ellipsis),
     ),
   );
 }
