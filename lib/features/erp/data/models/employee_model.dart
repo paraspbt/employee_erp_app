@@ -54,7 +54,7 @@ class EmployeeModel {
       credit: map['credit'] as double,
       updatedAt: DateTime.parse(map['updated_at'] as String),
       lastPaid: map['last_paid'] as String,
-      note: map['note'] as String,
+      note: map['note'] != null ? map['note'] as String : null,
     );
   }
 
