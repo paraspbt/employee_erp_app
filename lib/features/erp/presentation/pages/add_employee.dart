@@ -4,7 +4,7 @@ import 'package:emperp_app/core/widgets/input_field.dart';
 import 'package:emperp_app/core/widgets/my_app_bar.dart';
 import 'package:emperp_app/core/utils/show_snackbar.dart';
 import 'package:emperp_app/features/erp/presentation/EmpBloc/emp_bloc.dart';
-import 'package:emperp_app/features/erp/presentation/pages/emp_list.dart';
+import 'package:emperp_app/features/erp/presentation/pages/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -61,7 +61,7 @@ class _AddEmployeeState extends State<AddEmployeePage> {
             showSnackbar(context, state.message, true);
           } else if (state is EmpSuccess) {
             Navigator.pushAndRemoveUntil(
-                context, EmpListPage.route(), (route) => false);
+                context, MainScreen.route(), (route) => false);
           }
         },
         builder: (context, state) {

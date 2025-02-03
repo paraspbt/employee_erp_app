@@ -1,8 +1,10 @@
 import 'package:emperp_app/core/NavBloc/navigation_bloc.dart';
 import 'package:emperp_app/core/theme/app_pallete.dart';
 import 'package:emperp_app/core/widgets/my_app_bar.dart';
+import 'package:emperp_app/features/auth/presentation/AuthBloc/auth_bloc.dart';
 import 'package:emperp_app/features/erp/presentation/pages/dash_board.dart';
 import 'package:emperp_app/features/erp/presentation/pages/emp_list.dart';
+import 'package:emperp_app/features/erp/presentation/widgets/my_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,9 +23,15 @@ class MainScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: const MyAppBar(),
-          body: IndexedStack(
-            index: (state as CurrNavState).index,
-            children: pages,
+          drawer: myDrawer(context),
+          body: RefreshIndicator(
+            onRefresh: () async {
+              context.read<AuthBloc>().add(AuthUserLoggedInCheck());
+            },
+            child: IndexedStack(
+              index: (state as CurrNavState).index,
+              children: pages,
+            ),
           ),
           bottomNavigationBar: Material(
             elevation: 16,

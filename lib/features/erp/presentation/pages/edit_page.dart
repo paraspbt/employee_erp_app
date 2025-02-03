@@ -161,7 +161,7 @@ class _EditPageState extends State<EditPage> {
                         controller: noteController,
                         icon: const Icon(Icons.note),
                         keyboardType: TextInputType.multiline),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 4),
                     AppButton(
                       buttonText: 'Save',
                       onPressed: () {

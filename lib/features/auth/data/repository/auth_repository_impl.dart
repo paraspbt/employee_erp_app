@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:fpdart/fpdart.dart';
+import 'package:hive/hive.dart';
 
 import 'package:emperp_app/core/errors/failure.dart';
 import 'package:emperp_app/core/network/connection_check.dart';
@@ -9,9 +10,11 @@ import 'package:emperp_app/features/auth/data/models/user_model.dart';
 class AuthRepositoryImpl {
   final AuthRemoteDatasource authRemoteDatasource;
   final ConnectionCheck connectionCheck;
+  final Box hiveBox;
   const AuthRepositoryImpl(
     this.authRemoteDatasource,
     this.connectionCheck,
+    this.hiveBox,
   );
 
   Future<Either<Failure, UserModel>> loginWithEmailPassword(
@@ -72,6 +75,19 @@ class AuthRepositoryImpl {
         return left(Failure('User not logged in!'));
       }
       return right(userModel);
+    } on Exception catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> logout() async {
+    try {
+      if (!await (connectionCheck.isConnected)) {
+        return left(Failure('No Internet'));
+      }
+      await authRemoteDatasource.logout();
+      await hiveBox.clear();
+      return right(null);
     } on Exception catch (e) {
       return left(Failure(e.toString()));
     }

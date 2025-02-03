@@ -2,6 +2,7 @@
 
 import 'package:dotted_line/dotted_line.dart';
 import 'package:emperp_app/core/widgets/app_button.dart';
+import 'package:emperp_app/core/widgets/input_field.dart';
 import 'package:emperp_app/features/erp/presentation/EmpBloc/emp_bloc.dart';
 import 'package:emperp_app/features/erp/presentation/pages/edit_page.dart';
 import 'package:flutter/material.dart';
@@ -124,6 +125,8 @@ class _AccountPageState extends State<AccountPage> {
             onSelected: (String result) {
               if (result == 'edit') {
                 Navigator.push(context, EditPage.route(employee: employee));
+              } else if (result == 'delete') {
+                _deleteAlert(widget.employee.id);
               }
             },
             itemBuilder: (BuildContext context) => [
@@ -132,6 +135,13 @@ class _AccountPageState extends State<AccountPage> {
                 child: Text(
                   'Edit',
                   style: TextStyle(color: AppPallete.darkGreen),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'delete',
+                child: Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red),
                 ),
               ),
             ],
@@ -231,8 +241,14 @@ class _AccountPageState extends State<AccountPage> {
                       ),
                       const Spacer(),
                       AppButton(
+                          buttonText: 'Add Credit Note',
+                          onPressed: () => _addCreditNote(context)),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      AppButton(
                           buttonText: 'Settle',
-                          onPressed: isLoading ? null : _handleSettle),
+                          onPressed: isLoading ? null : _settleAlert),
                       const Spacer(),
                     ],
                   ),
@@ -267,6 +283,40 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
+  Future<void> _settleAlert() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirm Settle'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: AppPallete.brightRed),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _handleSettle();
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppPallete.darkGreen),
+              child: Text(
+                'Confirm',
+                style: TextStyle(color: AppPallete.backgroundColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _handleSettle() async {
     try {
       setState(() {
@@ -289,6 +339,113 @@ class _AccountPageState extends State<AccountPage> {
         isLoading = false;
       });
     }
+  }
+
+  Future<void> _deleteAlert(String employeeId) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: AppPallete.brightRed),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _deleteEmployee(employeeId);
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppPallete.darkGreen),
+              child: Text(
+                'Confirm',
+                style: TextStyle(color: AppPallete.backgroundColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteEmployee(String employeeId) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      await empRemoteDatasource.deleteEmployee(widget.employee.id);
+      showSnackbar(context, 'Employee has been successfully deleted.', false);
+    } on Exception catch (e) {
+      showSnackbar(context, 'Failed to delete employee: ${e.toString()}', true);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void _addCreditNote(BuildContext context) {
+    TextEditingController creditController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppPallete.backgroundColor,
+          title: const Text(
+            'Add Credit Note',
+            style: TextStyle(color: AppPallete.darkGreen),
+          ),
+          content: InputField(
+            hintText: "Enter Amount",
+            controller: creditController,
+            keyboardType: TextInputType.name,
+            prefixIcon: const Icon(Icons.currency_rupee),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: AppPallete.brightRed),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final creditAmount = int.tryParse(creditController.text);
+                if (creditAmount == null) {
+                  showSnackbar(context, "Enter a valid credit amount", true);
+                  return;
+                }
+                final updatedEmployee = widget.employee.copyWith(
+                  credit: widget.employee.credit + creditAmount,
+                );
+                context
+                    .read<EmpBloc>()
+                    .add(UpdateEmpEvent(updatedEmployee: updatedEmployee));
+                Navigator.pop(context);
+                showSnackbar(context, "Credit note added successfully", false);
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppPallete.darkGreen),
+              child: Text(
+                'Add',
+                style: TextStyle(color: AppPallete.backgroundColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:emperp_app/core/network/connection_check.dart';
 import 'package:emperp_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:emperp_app/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:emperp_app/features/auth/presentation/usecases/current_user.dart';
+import 'package:emperp_app/features/auth/presentation/usecases/log_out.dart';
 import 'package:emperp_app/features/auth/presentation/usecases/user_login.dart';
 import 'package:emperp_app/features/auth/presentation/usecases/user_signup.dart';
 import 'package:emperp_app/features/auth/presentation/AuthBloc/auth_bloc.dart';
@@ -26,21 +27,19 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 final getIt = GetIt.instance;
 
 Future<void> initDependencies() async {
- 
   await dotenv.load();
   final supabaseUrl = dotenv.env['SUPABASE_URL']!;
   final supabaseAnonKey = dotenv.env['SUPABASE_ANON_KEY']!;
 
-  final supabase = await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
+  final supabase =
+      await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
   getIt.registerLazySingleton(() => supabase.client);
-
 
   final appDocumentDir = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   final employeesBox = await Hive.openBox('employees');
   getIt.registerLazySingleton(() => employeesBox);
 
- 
   getIt.registerFactory(() => InternetConnection());
   getIt.registerFactory(() => ConnectionCheck(getIt<InternetConnection>()));
 
@@ -57,13 +56,15 @@ void _initAuth() {
       () => AuthRemoteDatasourceImpl(getIt<SupabaseClient>()));
 
   getIt.registerFactory<AuthRepositoryImpl>(() => AuthRepositoryImpl(
-      getIt<AuthRemoteDatasource>(), getIt<ConnectionCheck>()));
+      getIt<AuthRemoteDatasource>(), getIt<ConnectionCheck>(), getIt<Box>()));
 
   getIt.registerFactory(() => UserSignup(getIt<AuthRepositoryImpl>()));
 
   getIt.registerFactory(() => UserLogin(getIt<AuthRepositoryImpl>()));
 
   getIt.registerFactory(() => CurrentUser(getIt<AuthRepositoryImpl>()));
+
+  getIt.registerFactory(() => LogOut(getIt<AuthRepositoryImpl>()));
 
   getIt.registerLazySingleton(() => GlobalBloc(currdate: currdate));
 
@@ -73,6 +74,7 @@ void _initAuth() {
       userLogin: getIt<UserLogin>(),
       currentUser: getIt<CurrentUser>(),
       globalBloc: getIt<GlobalBloc>(),
+      logOut: getIt<LogOut>(),
     ),
   );
 }

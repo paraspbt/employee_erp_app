@@ -44,6 +44,20 @@ class EmpRemoteDatasource {
     }
   }
 
+  Future<void> deleteEmployee(String employeeId) async {
+    try {
+      
+      await supabaseClient
+          .from('employees')
+          .delete()
+          .eq('id', employeeId);
+    } on Exception catch (e) {
+      throw Exception('Failed to delete employee: ${e.toString()}');
+    }
+  }
+
+
+
   Future<void> updateAttendance(
       List<MapEntry<String, String?>> validEntries) async {
     try {

@@ -120,6 +120,9 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     );
                 }
+                if (state is AuthSuccess) {
+                  Navigator.pop(context);
+                }
               },
               builder: (context, state) {
                 if (state is AuthLoading) {
